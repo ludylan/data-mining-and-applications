@@ -1,0 +1,31 @@
+[project]
+name = "etf-agent"
+version = "0.1.0"
+description = "AI CUP 2026 ETF Agent - LangGraph 草框"
+requires-python = ">=3.12"
+dependencies = [
+    "langchain-core>=1.6.10",
+    "langchain-google-genai>=4.4.2",
+    "langgraph>=1.2.15",
+    "pydantic>=2.14.1",
+    "python-dotenv>=1.2.4",
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=9.1.1",
+    "ruff>=0.17.0",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/etf_agent"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 100
