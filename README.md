@@ -1,4 +1,4 @@
-# ETF Agent — AI CUP 2026 (Team 32)  
+﻿# ETF Agent — AI CUP 2026 (Team 32)  
 備註以下由AI擴寫  並非是本人的口吻，請不要太過較真  意思有傳到就好啦!
 
 這是一個**事件導向、因果與趨勢追蹤**的 ETF 經理人專案。目前技術暫定使用 LangGraph 搭建，目前是**草框**。
@@ -13,7 +13,7 @@
 如果你腦中有想法，但不確定怎麼寫成架構，**不需要自己硬想！**  
 我們準備了一份專門將「你的構想」轉化為「專案標準流程」的提示詞範本：
 
-👉 **[點此查看／複製 AI 助手提示詞 (docs/AI_PROMPT_TEMPLATE.md)](docs/AI_PROMPT_TEMPLATE.md)**
+👉 **[點此查看／複製 AI 助手提示詞 (docs/PHILOSOPHY.md)](docs/PHILOSOPHY.md)**
 
 只要把這份提示詞複製貼給 ChatGPT、Claude 或 Gemini，AI 就會成為你的「架構教練」：
 1. 擔任你與專案設計語言（Lingua Franca）之間的轉譯橋樑。
