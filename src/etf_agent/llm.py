@@ -10,11 +10,29 @@ from __future__ import annotations
 import os
 import tomllib
 from pathlib import Path
+from typing import Any
 
 from dotenv import load_dotenv
 
 load_dotenv()
 _CONFIG = Path(__file__).resolve().parents[2] / "config.toml"
+
+
+def extract_text_content(content: Any) -> str:
+    """從 LangChain / Google GenAI 回傳的 content (可能是 str 或 list of parts) 提取純文字。"""
+    if isinstance(content, str):
+        return content
+    if isinstance(content, list):
+        texts = []
+        for part in content:
+            if isinstance(part, str):
+                texts.append(part)
+            elif isinstance(part, dict) and "text" in part:
+                texts.append(str(part["text"]))
+            elif hasattr(part, "text"):
+                texts.append(str(part.text))
+        return "".join(texts)
+    return str(content or "")
 
 
 def get_llm(role: str):
