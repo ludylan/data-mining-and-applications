@@ -63,7 +63,7 @@ def main() -> int:
     etf_benchmarks = json.loads(benchmarks_file.read_text(encoding="utf-8")) if benchmarks_file.exists() else None
 
     state = run_dplan_pipeline(
-        datapack_input=args.datapack,
+        datapack_input=dp_target,
         external_quotes=quotes,
         macros=macros,
         extra_signals=load_extra_signals(ROOT / "inputs" / "extra_signals"),
