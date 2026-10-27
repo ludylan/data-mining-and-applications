@@ -43,11 +43,16 @@ def main() -> int:
         print(f"[OK] 抓到 {len(quotes)}/150 檔報價, {len(macros)} 筆總經指標")
     quotes = merge_quotes_with_datapack(dp, quotes)
 
+    # 讀取 30 檔主動 ETF 基準 (inputs/etf_benchmarks.json) 執行真實 Active Share 檢核
+    benchmarks_file = ROOT / "inputs" / "etf_benchmarks.json"
+    etf_benchmarks = json.loads(benchmarks_file.read_text(encoding="utf-8")) if benchmarks_file.exists() else None
+
     state = run_dplan_pipeline(
         datapack_input=args.datapack,
         external_quotes=quotes,
         macros=macros,
         extra_signals=load_extra_signals(ROOT / "inputs" / "extra_signals"),
+        etf_benchmarks=etf_benchmarks,
         output_dir=out_dir,
     )
     report = state["report"]

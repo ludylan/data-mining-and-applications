@@ -54,6 +54,7 @@ class DPlanGraphState(TypedDict, total=False):
     dplan: dict[str, Any]
     report: VerificationReport
     sandbox_feedback: str | None
+    thought_traces: list[dict[str, Any]]
     retry_count: int
     max_retries: int
     output_dir: str | None
@@ -88,7 +89,12 @@ def _node_pm_agent_draft(state: DPlanGraphState) -> dict[str, Any]:
         ledger=state["ledger"],
         feedback=state.get("sandbox_feedback"),
     )
-    return {"dplan": dplan_draft}
+    # 取出非 Schema 的思考軌跡（跨重試累積），避免污染 D-Plan 並供 finalize 存檔
+    new_traces = dplan_draft.pop("_thought_traces", [])
+    return {
+        "dplan": dplan_draft,
+        "thought_traces": list(state.get("thought_traces") or []) + new_traces,
+    }
 
 
 def _node_sandbox_verify(state: DPlanGraphState) -> dict[str, Any]:
@@ -156,6 +162,11 @@ def _node_finalize(state: DPlanGraphState) -> dict[str, Any]:
     file_path.write_text(
         json.dumps(dplan, ensure_ascii=False, indent=2), encoding="utf-8"
     )
+
+    # 存檔思考軌跡 thought_trace.jsonl（Prompt 與 LLM 原始回覆，供 12/2 審查）
+    with (p_dir / "thought_trace.jsonl").open("w", encoding="utf-8") as f:
+        for trace in state.get("thought_traces") or []:
+            f.write(json.dumps(trace, ensure_ascii=False) + "\n")
 
     # 存檔連結履歷 Ledger
     ledger = state.get("ledger")

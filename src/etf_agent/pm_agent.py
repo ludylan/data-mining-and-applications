@@ -369,13 +369,6 @@ def generate_or_repair_dplan_draft(
         except Exception as exc:
             print(f"[WARN] LLM inferences batch enhancement failed: {exc}")
 
-    # 存檔思考軌跡供 12/2 程式碼審查 (以獨立檔案保存，嚴禁污染 D-Plan JSON 欄位)
-    trace_dir = Path("runs") / dp_state.trade_date
-    trace_dir.mkdir(parents=True, exist_ok=True)
-    with (trace_dir / "thought_trace.jsonl").open("a", encoding="utf-8") as tf:
-        for tr in thought_traces:
-            tf.write(json.dumps(tr, ensure_ascii=False) + "\n")
-
     completed_at = _now_taipei_iso()
     return {
         "schema_version": "4.3",
@@ -396,4 +389,6 @@ def generate_or_repair_dplan_draft(
             "run_completed_at": completed_at,
             "code_version": code_version[:64],
         },
+        # 非 Schema 欄位：由 graph 節點取出並存成 thought_trace.jsonl，不會進入最終 D-Plan
+        "_thought_traces": thought_traces,
     }
