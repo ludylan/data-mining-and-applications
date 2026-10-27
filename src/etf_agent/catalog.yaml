@@ -1,0 +1,62 @@
+# 論據目錄 (Evidence Catalog)
+# 定義各類別與深度的論據清單，供 AI 經理人按需調取 (On-Demand Retrieval)
+
+version: "1.0"
+
+categories:
+  - id: price_volume
+    name: "價量與動能指標"
+    items:
+      - id: "pv.l1_daily"
+        depth: "L1"
+        name: "前日收盤價量事實"
+        desc: "收盤價、單日漲跌幅、成交量比、昨日持有股數與權重"
+        preload: true
+
+      - id: "pv.l2_trend"
+        depth: "L2"
+        name: "波段趨勢與動能均線"
+        desc: "近 5 日 / 20 日價格累積漲跌幅與相對強弱"
+        params: ["ticker"]
+
+      - id: "pv.l3_volatility"
+        depth: "L3"
+        name: "波動度與量價背離分析"
+        desc: "20 日歷史波動率、爆量反轉或量價背離異常訊號"
+        params: ["ticker"]
+
+  - id: supply_chain
+    name: "產業供應鏈因果傳導"
+    items:
+      - id: "sc.l1_relations"
+        depth: "L1"
+        name: "上下游鏈結基本關係"
+        desc: "標的於台股主流聚落（如先進封裝 CoWoS、AI 伺服器散熱、特化材料）之上中下游位置"
+        preload: true
+
+      - id: "sc.l2_impacts"
+        depth: "L2"
+        name: "連帶傳導履歷與強度"
+        desc: "龍頭核心股事件引發之連帶傳導強度、支持與削弱證據"
+        params: ["source_ticker", "target_ticker"]
+
+      - id: "sc.l3_precedents"
+        depth: "L3"
+        name: "歷史傳導案例復盤"
+        desc: "過去法說會、資本支出調整後該供應鏈族群之滯後反應天數與幅度"
+        params: ["cluster"]
+
+  - id: portfolio_risk
+    name: "投資組合與賽規約束"
+    items:
+      - id: "pr.l1_status"
+        depth: "L1"
+        name: "當前投組部位狀態"
+        desc: "現有持股檔數、可用現金比率、各股最新權重與法規上限"
+        preload: true
+
+      - id: "pr.l2_active_share"
+        depth: "L2"
+        name: "Active Share 緩衝試算"
+        desc: "若調整特定標的權重，對 30 檔主動型 ETF 基準之 Active Share 餘裕衝擊估算"
+        params: ["proposed_weights"]
