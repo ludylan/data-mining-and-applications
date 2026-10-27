@@ -26,12 +26,27 @@ from etf_agent.graph import run_dplan_pipeline  # noqa: E402
 
 
 def main() -> int:
-    ap = argparse.ArgumentParser()
-    ap.add_argument("datapack")
+    ap = argparse.ArgumentParser(description="AI CUP 2026 ETF Agent 每日一鍵執行腳本")
+    ap.add_argument(
+        "datapack",
+        nargs="?",
+        default=None,
+        help="DataPack.json 路徑。若不給，自動讀取 inputs/datapacks/ 最新日期的資料包",
+    )
     ap.add_argument("--offline", action="store_true", help="不連網，使用預設報價（僅測試用）")
     args = ap.parse_args()
 
-    dp = parse_datapack(args.datapack)
+    dp_target = args.datapack
+    if not dp_target:
+        dp_folder = ROOT / "inputs" / "datapacks"
+        candidates = sorted(dp_folder.glob("DataPack_*.json"))
+        if not candidates:
+            print("[ERROR] inputs/datapacks/ 資料夾內無任何 DataPack JSON 檔！請將大會下載的資料包放入該目錄。")
+            return 1
+        dp_target = str(candidates[-1])
+        print(f"[INFO] 未指定路徑，自動選用最新資料包：{dp_target}")
+
+    dp = parse_datapack(dp_target)
     out_dir = ROOT / "runs" / dp.trade_date
     snap = out_dir / "source_snapshots"
     out_dir.mkdir(parents=True, exist_ok=True)
